@@ -1,6 +1,9 @@
+#include <fmt/color.h>
+
 #include <functional>
 #include <iostream>
 #include <map>
+#include <starter/addition.hpp>
 #include <starter/version.hpp>
 
 #include "docopt.h"
@@ -29,6 +32,11 @@ auto main(int argc, const char **argv) -> int32_t {
                      "Naval Fate 2.0");  // version string
 
   for (auto const &arg : args) {
-    std::cout << arg.first << "=" << arg.second << std::endl;
+    std::cout << arg.first << "=" << arg.second << '\n';
   }
+
+  std::cout << "Version: " << STARTER_VER_MAJOR << '\n';
+
+  auto sum = starter::add(2, 2);
+  fmt::print(fg(fmt::color::crimson) | fmt::emphasis::bold, "\n2 + 2 = {}!\n", sum);
 }

@@ -60,12 +60,20 @@ CPMAddPackage(
   VERSION 0.6.3
 )
 if(docopt.cpp_ADDED)
-  #
-  # NOTE:  enable c++11 to avoid compilation errors, and force spdlog into release build
-  #
-  print(STATUS "docopt configured correctly build properties")
+  print(STATUS "docopt configured correctly")
 else()
   print(WARNING "docopt was not configured properly")
+endif()
+
+CPMAddPackage(
+  NAME fmt
+  GITHUB_REPOSITORY fmtlib/fmt
+  GIT_TAG 8.0.1
+)
+if(fmt_ADDED)
+  print(STATUS "fmt configured correctly")
+else()
+  print(WARNING "fmt was not configured properly")
 endif()
 
 #
@@ -126,7 +134,7 @@ endif()
 
 print(STATUS "Building main executable")
 add_executable(${PROJECT_NAME} ${STARTER_SOURCE})
-# NOTE: Add our external include directories
+# NOTE: Add our external include directory => include/starter
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDES})
 # NOTE: Link 3rd party libraries with the executable here
-target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs docopt)
+target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs docopt fmt::fmt)
