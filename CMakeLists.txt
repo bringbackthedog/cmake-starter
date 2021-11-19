@@ -93,7 +93,7 @@ endif()
 # NOTE: add additional project options
 #
 option(ENABLE_DEBUG "Building Debug version" OFF)
-option(ENABLE_PCH "Enable Precompiled Headers" OFF)
+option(ENABLE_PCH "Enable Precompiled Headers" ON)
 option(ENABLE_TESTING "Enable Test builds" OFF)
 option(ENABLE_EXAMPLES "Enable example builds" OFF)
 
