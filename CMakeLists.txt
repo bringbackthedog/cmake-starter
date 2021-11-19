@@ -19,13 +19,13 @@ project(
 #
 # NOTE: Set our source and include directory variables for use through the build
 #
-set(SOURCES "${PROJECT_SOURCE_DIR}/src")
-set(INCLUDES "${PROJECT_SOURCE_DIR}/include")
+set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
+set(INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 
 #
 # NOTE: Prevent in source builds (can't build in src/ or in project root)
 #
-if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR OR PROJECT_BINARY_DIR STREQUAL SOURCES)
+if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR OR PROJECT_BINARY_DIR STREQUAL SOURCE_DIR)
   print(
     FATAL_ERROR
     "In source builds are not allowed. Please make a new directory (called a build directory) and run CMake from there."
@@ -103,8 +103,8 @@ print(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 #
 # HACK: glob src files and header files (some people may not like this)
 #
-file(GLOB_RECURSE STARTER_HEADERS CONFIGURE_DEPENDS "${INCLUDES}/${PROJECT_NAME}/*.hpp")
-file(GLOB_RECURSE STARTER_SOURCE CONFIGURE_DEPENDS "${SOURCES}/*.cpp")
+file(GLOB_RECURSE GLOBBED_HEADERS CONFIGURE_DEPENDS "${INCLUDE_DIR}/${PROJECT_NAME}/*.hpp")
+file(GLOB_RECURSE GLOBBED_SOURCES CONFIGURE_DEPENDS "${SOURCE_DIR}/*.cpp")
 
 #
 # NOTE: This sets a global PCH parameter, each project will build its own PCH, which is a good idea
@@ -119,8 +119,15 @@ endif()
 #
 if(ENABLE_TESTING)
   enable_testing()
-  print(STATUS "Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
-  add_subdirectory(test)
+  include(CTest)
+  print(STATUS "Building Tests")
+  file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
+  set(TEST_BINARY "${PROJECT_NAME}-tests")
+  # here we need to compile each header and cpp file, but ommit the main.cpp, since catch2 will
+  # register two main functions, which will cause an error
+  add_executable(${TEST_BINARY} ${TEST_SOURCES} ${SOURCE_DIR}/addition.cpp)
+  target_include_directories(${TEST_BINARY} PUBLIC ${INCLUDE_DIR})
+  target_link_libraries(${TEST_BINARY} PRIVATE stdc++fs)
 endif()
 
 #
@@ -131,10 +138,10 @@ if(ENABLE_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
-
 print(STATUS "Building main executable")
-add_executable(${PROJECT_NAME} ${STARTER_SOURCE})
+set(BINARY "${PROJECT_NAME}-client")
+add_executable(${BINARY} ${GLOBBED_SOURCES})
 # NOTE: Add our external include directory => include/starter
-target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDES})
+target_include_directories(${BINARY} PUBLIC ${INCLUDE_DIR})
 # NOTE: Link 3rd party libraries with the executable here
-target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs docopt fmt::fmt)
+target_link_libraries(${BINARY} PRIVATE stdc++fs docopt fmt::fmt)
