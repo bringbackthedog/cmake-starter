@@ -4,17 +4,36 @@
 cmake_minimum_required(VERSION 3.10...3.21)
 
 #
-# NOTE: Include our own cmake scripts, and the CPM package manager
+# NOTE: Import get_version() function from utils, and set up project name
 #
-include(cmake/CPM.cmake)
-include(cmake/print.cmake)
 include(cmake/utils.cmake)
+
 get_version()
 project(
   starter
   VERSION ${STARTER_VERSION}
   LANGUAGES CXX
 )
+
+#
+# NOTE: Include our own cmake scripts, and the CPM package manager
+#
+include(cmake/CPM.cmake)
+include(cmake/print.cmake)
+include(cmake/StandardProjectSettings.cmake)
+
+#
+# NOTE: Link this 'library' to set the c++ standard / compile-time options requested
+#
+add_library(project_options INTERFACE)
+target_compile_features(project_options INTERFACE cxx_std_17)
+add_library(project_warnings INTERFACE)
+
+#
+# standard compiler warnings
+#
+include(cmake/CompilerWarnings.cmake)
+set_project_warnings(project_warnings)
 
 #
 # NOTE: Set our source and include directory variables for use through the build
@@ -37,12 +56,6 @@ endif()
 #
 include(CMakeDependentOption)
 include(GNUInstallDirs)
-include(CheckIPOSupported)
-
-#
-# NOTE: Export compile_commands.json file to support clang tooling
-#
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #
 # NOTE: Set C/C++ parameters for all targets in this CMakeLists.txt
@@ -119,8 +132,7 @@ endif()
 #
 if(ENABLE_TESTING)
   enable_testing()
-  include(CTest)
-  print(STATUS "Building Tests")
+  print(STATUS "Tests Enabled")
   file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
   set(TEST_BINARY "${PROJECT_NAME}-tests")
   # here we need to compile each header and cpp file, but ommit the main.cpp, since catch2 will
@@ -134,8 +146,13 @@ endif()
 # NOTE: Build project examples, mostly useful for shared/static libraries
 #
 if(ENABLE_EXAMPLES)
-  print(STATUS "Building examples")
-  add_subdirectory(examples)
+  print(STATUS "Examples Enabled")
+  # you would want to build each example as one executable, so no glob here
+  set(EXAMPLE_DIR "${PROJECT_SOURCE_DIR}/examples")
+  set(EXAMPLE_BINARY_ONE "example-1")
+  add_executable(${EXAMPLE_BINARY_ONE} ${EXAMPLE_DIR}/starter_example.cpp ${SOURCE_DIR}/addition.cpp)
+  target_include_directories(${EXAMPLE_BINARY_ONE} PUBLIC ${INCLUDE_DIR})
+  target_link_libraries(${EXAMPLE_BINARY_ONE} PRIVATE stdc++fs)
 endif()
 
 print(STATUS "Building main executable")
