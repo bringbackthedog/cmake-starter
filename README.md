@@ -11,7 +11,7 @@
 This container builds the development environment for Ubuntu 20.04
 
 Build image using:  
-`docker build -t <image-namge>:<tag>`
+`docker build -t <image-namge>:<tag> .`
 
 SSH into the container using:  
-`docker run -it <image-name>:<tag> .`
+`docker run -it <image-name>:<tag>`
