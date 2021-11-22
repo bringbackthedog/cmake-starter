@@ -1,6 +1,12 @@
 <div align="center">
   <h1>Cmake Starter</h1>
   <img src="https://github.com/mattcoding4days/cmake-starter/actions/workflows/cmake.yml/badge.svg?branch=dev">
+  <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/mattcoding4days/cmake-starter?style=flat-square">
+  <img alt="GitHub" src="https://img.shields.io/github/license/mattcoding4days/cmake-starter?style=flat-square">
+  <img alt="GitHub search hit counter" src="https://img.shields.io/github/search/mattcoding4days/cmake-starter/cmake?style=flat-square">
+  <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/mattcoding4days/cmake-starter?style=flat-square">
+  <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/mattcoding4days/cmake-starter?color=green&logo=github&logoColor=green&style=flat-square">
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/mattcoding4days/cmake-starter?color=pink&logo=github&logoColor=pink&style=flat-square">
 </div>
 
 ## About 
