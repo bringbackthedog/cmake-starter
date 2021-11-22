@@ -39,6 +39,8 @@ set_project_warnings(project_warnings)
 # NOTE: Set our source and include directory variables for use through the build
 #
 set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
+set(TEST_SOURCE_DIR "${PROJECT_SOURCE_DIR}/tests")
+set(EXAMPLES_SOURCE_DIR "${PROJECT_SOURCE_DIR}/examples")
 set(INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 
 #
@@ -67,6 +69,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -fPIC")
 # NOTE: This is where 3rd party libraries should be installed via the light weight CPM dependancy
 # management system. The CPM wiki is here: https://github.com/cpm-cmake/CPM.cmake/wiki/More-Snippets
 #
+CPMAddPackage("gh:catchorg/Catch2@2.13.7")
 CPMAddPackage(
   NAME docopt.cpp
   GITHUB_REPOSITORY docopt/docopt.cpp
@@ -133,13 +136,13 @@ endif()
 if(ENABLE_TESTING)
   enable_testing()
   print(STATUS "Tests Enabled")
-  file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
-  set(TEST_BINARY "${PROJECT_NAME}-tests")
-  # here we need to compile each header and cpp file, but ommit the main.cpp, since catch2 will
-  # register two main functions, which will cause an error
-  add_executable(${TEST_BINARY} ${TEST_SOURCES} ${SOURCE_DIR}/addition.cpp)
-  target_include_directories(${TEST_BINARY} PUBLIC ${INCLUDE_DIR})
-  target_link_libraries(${TEST_BINARY} PRIVATE stdc++fs)
+  #set(TEST_BINARY "${PROJECT_NAME}-tests")
+  ## here we need to compile each header and cpp file, but ommit the main.cpp, since catch2 will
+  ## register two main functions, which will cause an error
+  #add_executable(${TEST_BINARY} ${TEST_SOURCES} ${SOURCE_DIR}/addition.cpp)
+  #target_include_directories(${TEST_BINARY} PUBLIC ${INCLUDE_DIR})
+  #target_link_libraries(${TEST_BINARY} PRIVATE stdc++fs)
+  add_subdirectory("tests")
 endif()
 
 #
@@ -148,9 +151,8 @@ endif()
 if(ENABLE_EXAMPLES)
   print(STATUS "Examples Enabled")
   # you would want to build each example as one executable, so no glob here
-  set(EXAMPLE_DIR "${PROJECT_SOURCE_DIR}/examples")
   set(EXAMPLE_BINARY_ONE "example-1")
-  add_executable(${EXAMPLE_BINARY_ONE} ${EXAMPLE_DIR}/starter_example.cpp ${SOURCE_DIR}/addition.cpp)
+  add_executable(${EXAMPLE_BINARY_ONE} ${EXAMPLES_SOURCE_DIR}/starter_example.cpp ${SOURCE_DIR}/addition.cpp)
   target_include_directories(${EXAMPLE_BINARY_ONE} PUBLIC ${INCLUDE_DIR})
   target_link_libraries(${EXAMPLE_BINARY_ONE} PRIVATE stdc++fs)
 endif()
