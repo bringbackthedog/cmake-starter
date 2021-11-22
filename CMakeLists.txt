@@ -67,18 +67,29 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -fPIC")
 
 #
 # NOTE: This is where 3rd party libraries should be installed via the light weight CPM dependancy
-# management system. The CPM wiki is here: https://github.com/cpm-cmake/CPM.cmake/wiki/More-Snippets
+# management system. The CPM wiki is here:
+# https://github.com/cpm-cmake/CPM.cmake/wiki/More-Snippets
 #
-CPMAddPackage("gh:catchorg/Catch2@2.13.7")
 CPMAddPackage(
-  NAME docopt.cpp
-  GITHUB_REPOSITORY docopt/docopt.cpp
-  VERSION 0.6.3
+  Name Catch2
+  GITHUB_REPOSITORY catchorg/Catch2
+  VERSION 2.13.7
 )
-if(docopt.cpp_ADDED)
-  print(STATUS "docopt configured correctly")
+if(Catch2_ADDED)
+  print(STATUS "Catch2 configured correctly")
 else()
-  print(WARNING "docopt was not configured properly")
+  print(WARNING "Catch2 was not configured properly")
+endif()
+
+CPMAddPackage(
+  NAME CLI11
+  GITHUB_REPOSITORY CLIUtils/CLI11
+  VERSION 2.1.2
+)
+if(CLI11_ADDED)
+  print(STATUS "CLI11 configured correctly")
+else()
+  print(WARNING "CLI11 was not configured properly")
 endif()
 
 CPMAddPackage(
@@ -146,7 +157,9 @@ if(ENABLE_EXAMPLES)
   print(STATUS "Examples Enabled")
   # you would want to build each example as one executable, so no glob here
   set(EXAMPLE_BINARY_ONE "example-1")
-  add_executable(${EXAMPLE_BINARY_ONE} ${EXAMPLES_SOURCE_DIR}/starter_example.cpp ${SOURCE_DIR}/addition.cpp)
+  add_executable(
+    ${EXAMPLE_BINARY_ONE} ${EXAMPLES_SOURCE_DIR}/starter_example.cpp ${SOURCE_DIR}/addition.cpp
+  )
   target_include_directories(${EXAMPLE_BINARY_ONE} PUBLIC ${INCLUDE_DIR})
   target_link_libraries(${EXAMPLE_BINARY_ONE} PRIVATE stdc++fs)
 endif()
@@ -157,4 +170,4 @@ add_executable(${BINARY} ${GLOBBED_SOURCES})
 # NOTE: Add our external include directory => include/starter
 target_include_directories(${BINARY} PUBLIC ${INCLUDE_DIR})
 # NOTE: Link 3rd party libraries with the executable here
-target_link_libraries(${BINARY} PRIVATE stdc++fs docopt fmt::fmt)
+target_link_libraries(${BINARY} PRIVATE stdc++fs  CLI11::CLI11 fmt::fmt)
