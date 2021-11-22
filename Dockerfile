@@ -5,9 +5,9 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
-    apt-get -y install clangd cmake build-essential python3-pip && \
+    apt-get -y install clangd cmake build-essential python3-pip vim git && \
     pip3 install clang-format cmake-format 
 
-COPY ./cmake-starter/ /app
+COPY . /app
 
 
