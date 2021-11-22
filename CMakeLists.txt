@@ -136,12 +136,6 @@ endif()
 if(ENABLE_TESTING)
   enable_testing()
   print(STATUS "Tests Enabled")
-  #set(TEST_BINARY "${PROJECT_NAME}-tests")
-  ## here we need to compile each header and cpp file, but ommit the main.cpp, since catch2 will
-  ## register two main functions, which will cause an error
-  #add_executable(${TEST_BINARY} ${TEST_SOURCES} ${SOURCE_DIR}/addition.cpp)
-  #target_include_directories(${TEST_BINARY} PUBLIC ${INCLUDE_DIR})
-  #target_link_libraries(${TEST_BINARY} PRIVATE stdc++fs)
   add_subdirectory("tests")
 endif()
 
