@@ -10,4 +10,4 @@ RUN apt-get update && \
 
 COPY . /app
 
-RUN cd app && cmake -DENABLE_TESTING=ON -B build && cmake --build build && ./build/starter-tests
+RUN cd app && cmake -DENABLE_TESTING=ON -B build && cmake --build build && ./build/starter-tests -s

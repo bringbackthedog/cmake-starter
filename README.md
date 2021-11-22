@@ -15,8 +15,6 @@
 
 ### :keyboard: Commands
 
-> NOTE: before building you must remove your local build/ directory if you have one
-
 ```bash
 # Build the container (can be used to rebuild image after code changes)
 # [e.g] docker image build -t <image-name>:<tag> .
