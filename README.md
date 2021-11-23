@@ -35,4 +35,10 @@ docker container run -it cm:v0.1
 
 # Run non interactively
 docker container run cm:v0.1
+
+# Build image and share github ssh keys with container.
+# This provides access to private git repos.
+DOCKER_BUILDKIT=1 docker build -t cm:v0.1 \
+--secret id=pub_key,src=/home/$USER/.ssh/id_rsa.pub 
+--secret id=prv_key,src=/home/$USER/.ssh/id_rsa .
 ```

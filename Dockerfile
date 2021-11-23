@@ -11,3 +11,20 @@ RUN apt-get update && \
 COPY . /app
 
 RUN cd app && cmake -D ENABLE_TESTING=ON -B build && cmake --build build && cd build && ctest --verbose
+
+
+
+# TODO: Make this optional via a flag.
+# Optional: Share ssh key with container. 
+# Use this if you want to have access to
+# private git repos while running the container interactively. share ssh keys
+# with container.
+#
+# Must use build flags:
+# `--secret id=pub_key,src=/home/$USER/.ssh/id_rsa.pub 
+#  --secret id=prv_key,src=/home/$USER/.ssh/id_rsa `
+RUN mkdir -p -m 0400 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+RUN --mount=type=secret,id=prv_key,dst=/prv_key cat /prv_key >> ~/.ssh/id_rsa
+RUN --mount=type=secret,id=pub_key,dst=/pub_key cat /pub_key >> ~/.ssh/id_rsa.pub
+# Add proper permissions to ssh folder
+RUN chmod -R 400 ~/.ssh/
